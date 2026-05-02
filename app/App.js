@@ -1,21 +1,23 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback, useRef } from "react"
 import { Container } from "react-bootstrap"
 import { ipcRenderer } from "electron"
 import ForwardHeadPosture from "react-forward-head-posture"
 import Store from "electron-store"
 
 const store = new Store()
-const q = []
+const MAX_SAMPLES = 10
 
-export default function() {
+export default function App() {
+  const recentScores = useRef([])
   const [under, setUnder] = useState(store.get("under", 0))
   const [averageScore, setAverageScore] = useState(0)
   const onEstimate = useCallback(score => {
-    if (q.length > 9) {
-      q.shift()
+    const scores = recentScores.current
+    if (scores.length >= MAX_SAMPLES) {
+      scores.shift()
     }
-    q.push(score)
-    const average = q.reduce((prev, curr) => prev + curr, 0) / q.length
+    scores.push(score)
+    const average = scores.reduce((sum, value) => sum + value, 0) / scores.length
     setAverageScore(average)
     ipcRenderer.send("average", average)
   }, [])
@@ -35,8 +37,9 @@ export default function() {
           type="number"
           value={under}
           onChange={e => {
-            setUnder(e.target.value)
-            store.set("under", e.target.value)
+            const value = Number(e.target.value)
+            setUnder(value)
+            store.set("under", value)
           }}
         />
       </div>
