@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "react-bootstrap"
 
 const defaultButtonProps = {
@@ -22,9 +22,9 @@ function getButtonProps(queryResult) {
   }
 }
 
-export default function({ queryResult }) {
+export default function SaveButton({ queryResult }) {
   const [buttonProps, setButtonProps] = useState(defaultButtonProps)
-  useLayoutEffect(() => {
+  useEffect(() => {
     setButtonProps(getButtonProps(queryResult))
     const timeout = setTimeout(() => {
       setButtonProps(defaultButtonProps)

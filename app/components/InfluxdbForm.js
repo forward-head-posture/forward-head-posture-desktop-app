@@ -9,7 +9,7 @@ import QueryTestResult from "./QueryTestResult"
 
 const store = new Store()
 
-export default function() {
+export default function InfluxdbForm() {
   const [queryResult, setQueryResult] = useState()
 
   async function onSubmit(values) {
@@ -19,7 +19,7 @@ export default function() {
       setQueryResult(err)
       return
     }
-    if (result.lenght !== 0 && !result[0].menubar) {
+    if (result.length !== 0 && !result[0].menubar) {
       setQueryResult(
         new Error(`Query was success but alias name is not menubar.
         ex) SELECT "column" as menubar FROM "cpu_load_short"
